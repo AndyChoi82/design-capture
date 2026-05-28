@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Design Capture — HTML to Figma, Instantly</title>
+<meta name="description" content="웹 페이지를 Figma 디자인 에셋으로 즉시 변환. Convert any web page to Figma design assets instantly."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--blue:#2340C4;--purple:#4B35A8;--mint:#7ECFC0;--lb:#E8ECFA;--dark:#0D1117;--dark2:#161B27;--gray:#637083;--white:#FFFFFF}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--dark);color:var(--white);overflow-x:hidden}
+
+/* ── LANG TOGGLE ── */
+.lang-toggle{position:fixed;top:18px;right:90px;z-index:200;display:flex;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;overflow:hidden}
+.lang-btn{padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.5);transition:all .15s;letter-spacing:.3px}
+.lang-btn.active{background:var(--blue);color:#fff}
+[lang-content="en"]{display:none}
+[lang-content="ko"]{display:block}
+body.en [lang-content="ko"]{display:none!important}
+body.en [lang-content="en"]{display:block!important}
+body.en{font-family:'Syne','Noto Sans KR',sans-serif}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(13,17,23,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-mark{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff}
+.nav-logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#fff}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{height:36px;padding:0 18px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;font-family:inherit;transition:background .2s}
+.nav-cta:hover{background:#1a30a0}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 40px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(35,64,196,.25) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(126,207,192,.1) 0%,transparent 60%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(35,64,196,.2);border:1px solid rgba(35,64,196,.4);border-radius:100px;font-size:12px;font-weight:600;color:var(--mint);margin-bottom:28px;letter-spacing:.5px}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--mint);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+h1{font-family:'Syne',sans-serif;font-size:clamp(40px,7vw,88px);font-weight:800;line-height:1.0;letter-spacing:-2px;margin-bottom:24px;max-width:900px}
+h1 .accent{background:linear-gradient(135deg,#7ECFC0,#2340C4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(15px,2vw,19px);color:rgba(255,255,255,.6);max-width:560px;line-height:1.7;margin-bottom:48px;font-weight:400}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.btn-primary{height:52px;padding:0 32px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-family:inherit;transition:all .2s;box-shadow:0 0 30px rgba(35,64,196,.4)}
+.btn-primary:hover{background:#1a30a0;transform:translateY(-2px);box-shadow:0 4px 40px rgba(35,64,196,.6)}
+.btn-secondary{height:52px;padding:0 32px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-family:inherit;transition:all .2s}
+.btn-secondary:hover{border-color:rgba(255,255,255,.5);transform:translateY(-2px)}
+.hero-img{margin-top:72px;max-width:880px;width:100%}
+.hero-screen{background:var(--dark2);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px;box-shadow:0 40px 100px rgba(0,0,0,.6)}
+.screen-bar{display:flex;gap:8px;margin-bottom:20px}
+.screen-dot{width:12px;height:12px;border-radius:50%}
+.screen-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.screen-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:16px}
+.screen-card-label{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:8px;font-family:'Syne',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+
+/* ── SECTION ── */
+section{padding:100px 40px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mint);margin-bottom:14px}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.1;letter-spacing:-1px;margin-bottom:18px}
+.section-sub{font-size:16px;color:rgba(255,255,255,.5);line-height:1.7;max-width:540px}
+
+/* ── STEPS ── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.step{background:var(--dark2);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:28px;transition:border-color .2s}
+.step:hover{border-color:rgba(35,64,196,.5)}
+.step-num{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;color:rgba(35,64,196,.3);line-height:1;margin-bottom:14px}
+.step-icon{width:44px;height:44px;background:rgba(35,64,196,.15);border:1px solid rgba(35,64,196,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+.step h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:8px}
+.step p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6}
+
+/* ── FEATURES ── */
+.features-section{background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:52px;border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden}
+.feature{padding:28px;border-right:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);transition:background .2s}
+.feature:hover{background:rgba(35,64,196,.07)}
+.feature:nth-child(3n){border-right:none}
+.feature:nth-child(n+4){border-bottom:none}
+.feature-icon{font-size:26px;margin-bottom:14px}
+.feature h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:7px}
+.feature p{font-size:13px;color:rgba(255,255,255,.48);line-height:1.6}
+
+/* ── DOWNLOAD ── */
+.download-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:44px;max-width:680px}
+.dl-card{background:var(--dark2);border:1.5px solid rgba(255,255,255,.08);border-radius:14px;padding:24px;display:flex;align-items:center;gap:18px;text-decoration:none;color:#fff;transition:all .2s}
+.dl-card:hover{border-color:var(--blue);background:rgba(35,64,196,.1);transform:translateY(-3px);box-shadow:0 10px 40px rgba(35,64,196,.2)}
+.dl-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.dl-icon.mac{background:rgba(255,255,255,.06)}
+.dl-icon.win{background:rgba(0,120,212,.12)}
+.dl-info h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px}
+.dl-info p{font-size:12px;color:rgba(255,255,255,.4)}
+.dl-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-top:5px;display:inline-block;background:rgba(126,207,192,.15);color:var(--mint);border:1px solid rgba(126,207,192,.3)}
+.install-note{margin-top:44px;padding:20px 22px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;max-width:680px}
+.install-note h4{font-size:13px;font-weight:700;margin-bottom:12px;color:rgba(255,255,255,.75)}
+.install-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:9px;font-size:13px;color:rgba(255,255,255,.48);line-height:1.5}
+.install-step-num{width:20px;height:20px;border-radius:50%;background:rgba(35,64,196,.3);color:var(--mint);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ── PRICING ── */
+.price-card{max-width:400px;margin:44px auto 0;background:linear-gradient(135deg,var(--dark2),rgba(35,64,196,.15));border:1.5px solid rgba(35,64,196,.4);border-radius:20px;padding:36px;text-align:center;position:relative;overflow:hidden}
+.price-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(35,64,196,.2),transparent 60%);pointer-events:none}
+.price-badge{display:inline-block;padding:4px 14px;background:rgba(126,207,192,.15);border:1px solid rgba(126,207,192,.3);border-radius:100px;font-size:12px;font-weight:700;color:var(--mint);margin-bottom:18px}
+.price-amount{font-family:'Syne',sans-serif;font-size:60px;font-weight:800;line-height:1;margin-bottom:5px;letter-spacing:-2px}
+.price-amount sup{font-size:22px;vertical-align:super;letter-spacing:0}
+.price-period{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:26px}
+.price-features{list-style:none;margin-bottom:28px;text-align:left}
+.price-features li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:9px}
+.price-features li:last-child{border-bottom:none}
+.check{color:var(--mint);font-weight:700}
+.price-cta{width:100%;height:50px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 0 30px rgba(35,64,196,.4);text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.price-cta:hover{background:#1a30a0;transform:translateY(-2px)}
+.free-note{margin-top:12px;font-size:11px;color:rgba(255,255,255,.3)}
+
+/* ── FOOTER ── */
+footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:center}
+.footer-logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.footer-links{display:flex;gap:22px;justify-content:center;margin:14px 0}
+.footer-links a{color:rgba(255,255,255,.38);text-decoration:none;font-size:13px;transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.22)}
+
+@media(max-width:768px){
+  nav{padding:0 16px}.nav-links{display:none}
+  .lang-toggle{right:70px;top:16px}
+  .hero{padding:80px 20px 60px}
+  .steps,.features-grid{grid-template-columns:1fr}
+  .download-grid{grid-template-columns:1fr}
+  .feature:nth-child(n){border-right:none}
+  section{padding:70px 20px}
+  .screen-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- 언어 토글 -->
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ko')" id="btn-ko">KO</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">✦</div>
+    <span class="nav-logo-text">Design Capture</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how"><span lang-content="ko">사용 방법</span><span lang-content="en">How it works</span></a>
+    <a href="#features"><span lang-content="ko">기능</span><span lang-content="en">Features</span></a>
+    <a href="#download"><span lang-content="ko">다운로드</span><span lang-content="en">Download</span></a>
+    <a href="#pricing"><span lang-content="ko">가격</span><span lang-content="en">Pricing</span></a>
+  </div>
+  <a href="#pricing" class="nav-cta">
+    <span lang-content="ko">시작하기 →</span>
+    <span lang-content="en">Get started →</span>
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>Chrome Extension + Figma Plugin
+  </div>
+  <h1 lang-content="ko">HTML을 Figma로,<br/><span class="accent">즉시 변환</span></h1>
+  <h1 lang-content="en">HTML to Figma,<br/><span class="accent">Instantly</span></h1>
+  <p class="hero-sub" lang-content="ko">웹 페이지 어디서나 클릭 한 번으로 캡쳐 — 레이아웃, 색상, 폰트까지 Figma 디자인 에셋으로 정확하게 변환됩니다.</p>
+  <p class="hero-sub" lang-content="en">Capture any web page with one click — layout, colors, fonts and more, converted accurately into native Figma design assets.</p>
+  <div class="hero-btns">
+    <a href="#pricing" class="btn-primary">
+      <span lang-content="ko">✦ 라이센스 구매 $9.99</span>
+      <span lang-content="en">✦ Get License $9.99</span>
+    </a>
+    <a href="#download" class="btn-secondary">
+      <span lang-content="ko">⬇ 무료로 시작</span>
+      <span lang-content="en">⬇ Start for free</span>
+    </a>
+  </div>
+  <div class="hero-img">
+    <div class="hero-screen">
+      <div class="screen-bar">
+        <div class="screen-dot" style="background:#FF5F57"></div>
+        <div class="screen-dot" style="background:#FFBD2E"></div>
+        <div class="screen-dot" style="background:#28C840"></div>
+      </div>
+      <div class="screen-grid">
+        <div class="screen-card">
+          <div class="screen-card-label">Chrome Extension</div>
+          <div style="background:rgba(35,64,196,.2);border-radius:6px;padding:10px;margin-bottom:8px">
+            <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:6px">
+              <span lang-content="ko">현재 페이지 캡쳐</span><span lang-content="en">Capture current page</span>
+            </div>
+            <div style="height:5px;background:linear-gradient(90deg,#2340C4,#7ECFC0);border-radius:3px;width:75%"></div>
+            <div style="font-size:10px;color:var(--mint);margin-top:4px">✓ 663 nodes captured</div>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,.35)">v21 · 1678px</div>
+        </div>
+        <div class="screen-card">
+          <div class="screen-card-label">Figma Plugin</div>
+          <div style="margin-bottom:8px"><span style="display:inline-block;padding:3px 8px;border-radius:5px;background:rgba(126,207,192,.15);color:var(--mint);font-size:11px;font-weight:600">● Online</span></div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px">Converting... 528/663</div>
+          <div style="height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden">
+            <div style="height:100%;width:80%;background:linear-gradient(90deg,#2340C4,#7ECFC0);border-radius:2px"></div>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px">80% complete</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <div class="section-title" lang-content="ko">3단계로 끝납니다</div>
+    <div class="section-title" lang-content="en">Done in 3 steps</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">📡</div>
+        <h3 lang-content="ko">서버 실행</h3>
+        <h3 lang-content="en">Run the server</h3>
+        <p lang-content="ko">Design Capture Server 앱을 실행하세요. 트레이에 상주하며 백그라운드에서 자동 동작합니다.</p>
+        <p lang-content="en">Launch the Design Capture Server app. It runs silently in the system tray in the background.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">📸</div>
+        <h3 lang-content="ko">페이지 캡쳐</h3>
+        <h3 lang-content="en">Capture the page</h3>
+        <p lang-content="ko">Chrome 확장에서 캡쳐 버튼 클릭. DOM 구조, CSS, 폰트, 색상을 모두 정확히 수집합니다.</p>
+        <p lang-content="en">Click capture in the Chrome extension. DOM structure, CSS styles, fonts, and colors are all collected accurately.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">🎨</div>
+        <h3 lang-content="ko">Figma로 변환</h3>
+        <h3 lang-content="en">Convert to Figma</h3>
+        <p lang-content="ko">피그마 플러그인에서 가져오기 클릭. Frame, Text, Fill, Shadow 등 네이티브 요소로 생성됩니다.</p>
+        <p lang-content="en">Click import in the Figma plugin. Frames, Text, Fills, Shadows and more are created as native Figma elements.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="section-inner">
+    <div class="section-label">Features</div>
+    <div class="section-title" lang-content="ko">주요 기능</div>
+    <div class="section-title" lang-content="en">What's included</div>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-icon">🎨</div>
+        <h3 lang-content="ko">CSS 완전 변환</h3>
+        <h3 lang-content="en">Full CSS conversion</h3>
+        <p lang-content="ko">배경색, 그라디언트, border-radius, box-shadow를 Figma Fill/Effect로 정확하게 변환합니다.</p>
+        <p lang-content="en">Background colors, gradients, border-radius and box-shadow are converted precisely to Figma Fills and Effects.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✦</div>
+        <h3 lang-content="ko">CSS 변수 해석</h3>
+        <h3 lang-content="en">CSS variable resolution</h3>
+        <p lang-content="ko">var(--primary) 같은 CSS 변수도 실제 색상값으로 해석하여 그라디언트까지 완벽 지원합니다.</p>
+        <p lang-content="en">CSS variables like var(--primary) are resolved to actual color values, including full gradient support.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📝</div>
+        <h3 lang-content="ko">폼 요소 캡쳐</h3>
+        <h3 lang-content="en">Form element capture</h3>
+        <p lang-content="ko">Input, Select, Textarea, Checkbox 등 폼 요소의 value와 placeholder까지 Figma 텍스트로 변환합니다.</p>
+        <p lang-content="en">Input, Select, Textarea, and Checkbox elements including values and placeholders are converted to Figma text.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <h3 lang-content="ko">실시간 진행률</h3>
+        <h3 lang-content="en">Real-time progress</h3>
+        <p lang-content="ko">수백 개 노드 변환 시 퍼센트 진행률을 실시간 표시합니다.</p>
+        <p lang-content="en">Real-time percentage progress display when converting hundreds of nodes.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔤</div>
+        <h3 lang-content="ko">Pretendard 지원</h3>
+        <h3 lang-content="en">Pretendard support</h3>
+        <p lang-content="ko">한국어 UI에 최적화된 Pretendard 폰트를 우선 적용, 굵기까지 정확히 매핑합니다.</p>
+        <p lang-content="en">Pretendard font optimized for Korean UI is applied first with precise font-weight mapping.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🖥</div>
+        <h3 lang-content="ko">Mac & Windows</h3>
+        <h3 lang-content="en">Mac & Windows</h3>
+        <p lang-content="ko">Mac (Apple Silicon/Intel)과 Windows 모두 지원. 터미널 없이 앱으로 간편하게 사용 가능합니다.</p>
+        <p lang-content="en">Supports Mac (Apple Silicon/Intel) and Windows. Use the app without any terminal commands.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section id="download">
+  <div class="section-inner">
+    <div class="section-label">Download</div>
+    <div class="section-title" lang-content="ko">릴레이 서버 앱 다운로드</div>
+    <div class="section-title" lang-content="en">Download the relay server app</div>
+    <p class="section-sub" lang-content="ko">터미널 없이 클릭 한 번으로 서버를 실행하고 트레이에서 관리하세요.</p>
+    <p class="section-sub" lang-content="en">Run the server with one click and manage it from the system tray — no terminal needed.</p>
+    <div class="download-grid">
+      <a href="https://github.com/AndyChoi82/design-capture-/releases/latest/download/Design-Capture-Server-arm64.dmg" class="dl-card">
+        <div class="dl-icon mac">🍎</div>
+        <div class="dl-info">
+          <h3>Mac (Apple Silicon)</h3>
+          <p>M1 · M2 · M3 · M4</p>
+          <span class="dl-badge" lang-content="ko">추천</span>
+          <span class="dl-badge" lang-content="en">Recommended</span>
+        </div>
+      </a>
+      <a href="https://github.com/AndyChoi82/design-capture-/releases/latest/download/Design-Capture-Server-x64.dmg" class="dl-card">
+        <div class="dl-icon mac">🍎</div>
+        <div class="dl-info">
+          <h3>Mac (Intel)</h3>
+          <p>Intel Core</p>
+        </div>
+      </a>
+      <a href="https://github.com/AndyChoi82/design-capture-/releases/latest/download/Design-Capture-Server-Setup.exe" class="dl-card">
+        <div class="dl-icon win">🪟</div>
+        <div class="dl-info">
+          <h3>Windows</h3>
+          <p>Windows 10 / 11 (64bit)</p>
+        </div>
+      </a>
+    </div>
+    <div class="install-note">
+      <h4 lang-content="ko">⚙ 설치 후 시작 가이드</h4>
+      <h4 lang-content="en">⚙ Quick start guide</h4>
+      <div class="install-step"><span class="install-step-num">1</span><span lang-content="ko">앱 설치 → Design Capture Server 실행 → 서버 시작 클릭</span><span lang-content="en">Install the app → Launch Design Capture Server → Click Start server</span></div>
+      <div class="install-step"><span class="install-step-num">2</span><span lang-content="ko">Chrome 웹 스토어에서 Design Capture 확장 설치</span><span lang-content="en">Install the Design Capture extension from the Chrome Web Store</span></div>
+      <div class="install-step"><span class="install-step-num">3</span><span lang-content="ko">Figma Community에서 Design Capture 플러그인 설치</span><span lang-content="en">Install the Design Capture plugin from Figma Community</span></div>
+      <div class="install-step"><span class="install-step-num">4</span><span lang-content="ko">캡쳐 → 변환 완료! 무료 플랜으로 20건 무료 사용 가능</span><span lang-content="en">Capture and convert. Free plan includes 20 conversions.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:rgba(255,255,255,.01)">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label" style="text-align:center">Pricing</div>
+    <div class="section-title" style="text-align:center;margin:0 auto 10px" lang-content="ko">심플한 가격</div>
+    <div class="section-title" style="text-align:center;margin:0 auto 10px" lang-content="en">Simple pricing</div>
+    <p class="section-sub" style="margin:0 auto" lang-content="ko">구독 없음. 1회 결제, 1년 사용.</p>
+    <p class="section-sub" style="margin:0 auto" lang-content="en">No subscription. One-time payment, one year of use.</p>
+    <div class="price-card">
+      <div class="price-badge" lang-content="ko">✦ 라이센스</div>
+      <div class="price-badge" lang-content="en">✦ License</div>
+      <div class="price-amount"><sup>$</sup>9.99</div>
+      <div class="price-period" lang-content="ko">/ 1년 · 만료 후 동일 가격으로 갱신</div>
+      <div class="price-period" lang-content="en">/ 1 year · Renew at the same price</div>
+      <ul class="price-features">
+        <li><span class="check">✓</span><span lang-content="ko">무제한 변환 (20건 제한 해제)</span><span lang-content="en">Unlimited conversions (removes 20-use limit)</span></li>
+        <li><span class="check">✓</span><span lang-content="ko">2대 기기 동시 사용</span><span lang-content="en">Use on up to 2 devices</span></li>
+        <li><span class="check">✓</span><span lang-content="ko">라이센스 코드 즉시 이메일 발송</span><span lang-content="en">License code delivered instantly by email</span></li>
+        <li><span class="check">✓</span><span lang-content="ko">모든 업데이트 포함</span><span lang-content="en">All updates included</span></li>
+        <li><span class="check">✓</span><span lang-content="ko">이메일 지원</span><span lang-content="en">Email support</span></li>
+      </ul>
+      <a href="https://your-store.lemonsqueezy.com/checkout/buy/xxxxx" class="price-cta">
+        <span lang-content="ko">지금 구매하기 →</span>
+        <span lang-content="en">Buy now →</span>
+      </a>
+      <p class="free-note" lang-content="ko">카드 · PayPal 결제 가능 · 먼저 20건 무료로 체험</p>
+      <p class="free-note" lang-content="en">Card · PayPal accepted · Try free for 20 conversions first</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <div class="nav-logo-mark">✦</div>Design Capture
+  </div>
+  <div class="footer-links">
+    <a href="#how"><span lang-content="ko">사용 방법</span><span lang-content="en">How it works</span></a>
+    <a href="#features"><span lang-content="ko">기능</span><span lang-content="en">Features</span></a>
+    <a href="#download"><span lang-content="ko">다운로드</span><span lang-content="en">Download</span></a>
+    <a href="mailto:akawoo82@gmail.com"><span lang-content="ko">문의</span><span lang-content="en">Contact</span></a>
+  </div>
+  <p class="footer-copy">© 2025 Design Capture · akawoo82@gmail.com</p>
+</footer>
+
+<script>
+function setLang(lang) {
+  document.body.classList.toggle('en', lang === 'en');
+  document.getElementById('btn-ko').classList.toggle('active', lang === 'ko');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  localStorage.setItem('dc_lang', lang);
+}
+// 저장된 언어 불러오기
+(function(){
+  var saved = localStorage.getItem('dc_lang');
+  if (saved === 'en') setLang('en');
+})();
+</script>
+</body>
+</html>
