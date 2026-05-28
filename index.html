@@ -14,7 +14,7 @@ html{scroll-behavior:smooth}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--dark);color:var(--white);overflow-x:hidden}
 
 /* ── LANG TOGGLE ── */
-.lang-toggle{position:fixed;top:18px;right:90px;z-index:200;display:flex;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;overflow:hidden}
+.lang-toggle{position:fixed;top:18px;right:16px;z-index:200;display:flex;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;overflow:hidden}
 .lang-btn{padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.5);transition:all .15s;letter-spacing:.3px}
 .lang-btn.active{background:var(--blue);color:#fff}
 [lang-content="en"]{display:none}
@@ -123,7 +123,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
 
 @media(max-width:768px){
   nav{padding:0 16px}.nav-links{display:none}
-  .lang-toggle{right:70px;top:16px}
+  .lang-toggle{right:12px;top:16px}
   .hero{padding:80px 20px 60px}
   .steps,.features-grid{grid-template-columns:1fr}
   .download-grid{grid-template-columns:1fr}
@@ -153,10 +153,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
     <a href="#download"><span lang-content="ko">다운로드</span><span lang-content="en">Download</span></a>
     <a href="#pricing"><span lang-content="ko">가격</span><span lang-content="en">Pricing</span></a>
   </div>
-  <a href="#pricing" class="nav-cta">
-    <span lang-content="ko">시작하기 →</span>
-    <span lang-content="en">Get started →</span>
-  </a>
+
 </nav>
 
 <!-- HERO -->
