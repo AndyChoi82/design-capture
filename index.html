@@ -147,6 +147,78 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
   section{padding:70px 20px}
   .screen-grid{grid-template-columns:1fr}
 }
+
+/* ══ ANIMATION: C — Hero Split Morph ══ */
+.hero-split{display:flex;align-items:center;gap:0;max-width:860px;width:100%;margin-top:64px}
+.split-browser{flex:1;background:#161B27;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.split-browser-bar{background:rgba(255,255,255,.05);padding:10px 14px;display:flex;align-items:center;gap:6px}
+.split-browser-dot{width:10px;height:10px;border-radius:50%}
+.split-browser-url{flex:1;height:18px;background:rgba(255,255,255,.07);border-radius:4px;margin-left:10px}
+.split-browser-body{padding:14px}
+.sb-nav{width:100%;height:20px;background:rgba(255,255,255,.06);border-radius:4px;margin-bottom:10px}
+.sb-hero-block{width:100%;height:50px;background:linear-gradient(135deg,rgba(35,64,196,.3),rgba(126,207,192,.15));border-radius:6px;margin-bottom:8px;position:relative;overflow:hidden}
+.sb-hero-block::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);animation:shimmer 2.5s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.sb-cards-row{display:flex;gap:6px;margin-bottom:6px}
+.sb-card-block{flex:1;height:32px;background:rgba(255,255,255,.05);border-radius:5px;border:1px solid rgba(255,255,255,.06)}
+.sb-text-rows{display:flex;flex-direction:column;gap:5px}
+.sb-text-row{height:7px;background:rgba(255,255,255,.06);border-radius:3px}
+.sb-capture-overlay{margin-top:10px;padding:7px 10px;border-radius:6px;background:rgba(35,64,196,.25);border:1px solid rgba(35,64,196,.45);font-size:11px;color:var(--mint);font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.capture-pulse{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:capturepulse 1s infinite}
+@keyframes capturepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+.split-arrow-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 20px;flex-shrink:0}
+.split-arrow-svg{width:48px}
+.split-arrow-label{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.5px;font-weight:600;animation:arrowlabelflash 2s ease-in-out infinite}
+@keyframes arrowlabelflash{0%,100%{opacity:.3}50%{opacity:.9}}
+
+.split-figma{flex:1;background:#161B27;border:1px solid rgba(35,64,196,.35);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.split-figma-bar{background:rgba(35,64,196,.15);padding:10px 14px;display:flex;align-items:center;gap:6px}
+.split-figma-bar-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-left:6px;font-family:'Syne',sans-serif}
+.sfb-dot{width:10px;height:10px;border-radius:50%}
+.split-figma-body{padding:14px}
+.sf-layer-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.sf-layer-item{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:11px;color:rgba(255,255,255,.65)}
+.sf-layer-item.active{background:rgba(35,64,196,.2);border-color:rgba(35,64,196,.4);color:#fff;animation:layerappear .4s ease-out}
+@keyframes layerappear{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+.sf-layer-icon{font-size:12px;opacity:.7}
+.sf-layer-tag{margin-left:auto;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(126,207,192,.15);color:var(--mint);font-weight:700}
+
+/* ── B: Progress bar in figma panel ── */
+.sf-progress-section{border-top:1px solid rgba(255,255,255,.06);padding-top:10px}
+.sf-prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sf-prog-label{font-size:10px;color:rgba(255,255,255,.45)}
+.sf-prog-pct{font-size:10px;font-weight:700;color:var(--mint)}
+.sf-prog-bar-bg{height:4px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden;margin-bottom:5px}
+.sf-prog-bar-fill{height:100%;background:linear-gradient(90deg,#2340C4,#7ECFC0);border-radius:100px;transition:width .1s linear}
+.sf-prog-count{font-size:10px;color:rgba(255,255,255,.3);text-align:right}
+
+/* ══ ANIMATION: D — Scroll Step Draw ══ */
+.steps-timeline{display:flex;flex-direction:column;gap:0;margin-top:52px;max-width:680px}
+.step-tl{display:flex;gap:0;position:relative}
+.step-tl-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0}
+.step-tl-circ{width:44px;height:44px;border-radius:50%;background:rgba(35,64,196,.15);border:1.5px solid rgba(35,64,196,.3);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:rgba(35,64,196,.6);flex-shrink:0;transition:all .5s ease;position:relative;z-index:2}
+.step-tl-circ.visible{background:rgba(35,64,196,.3);border-color:var(--blue);color:var(--mint);box-shadow:0 0 20px rgba(35,64,196,.3)}
+.step-tl-line{width:2px;flex:1;background:rgba(35,64,196,.15);min-height:40px;position:relative;overflow:hidden}
+.step-tl-line::after{content:'';position:absolute;top:0;left:0;right:0;height:0%;background:linear-gradient(180deg,var(--blue),var(--mint));transition:height .6s ease .2s}
+.step-tl-line.drawn::after{height:100%}
+.step-tl-right{flex:1;padding:0 0 40px 20px}
+.step-tl-num-label{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(35,64,196,.5);text-transform:uppercase;margin-bottom:6px;margin-top:10px}
+.step-tl-title{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;line-height:1.3;opacity:.5;transform:translateX(-10px);transition:all .5s ease}
+.step-tl-title.visible{opacity:1;transform:translateX(0)}
+.step-tl-desc{font-size:14px;color:rgba(255,255,255,.48);line-height:1.65;opacity:.4;transition:opacity .5s ease .1s}
+.step-tl-desc.visible{opacity:1}
+.step-tl-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.step-tl-tag{font-size:11px;padding:4px 12px;background:rgba(35,64,196,.15);border:1px solid rgba(35,64,196,.25);border-radius:100px;color:rgba(255,255,255,.6);font-weight:600;opacity:.4;transition:opacity .5s ease .2s}
+.step-tl-tag.visible{opacity:1}
+
+@media(max-width:768px){
+  .hero-split{flex-direction:column;gap:16px}
+  .split-arrow-col{flex-direction:row;padding:0}
+  .split-arrow-svg{transform:rotate(90deg)}
+  .steps-timeline{max-width:100%}
+}
+
 </style>
 </head>
 <body>
@@ -200,33 +272,71 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
   </div>
   <p class="hero-meal" lang-content="ko">라이센스는 $9.99 · 밥 한 끼 가격으로 1년 무제한</p>
   <p class="hero-meal" lang-content="en">License at $9.99 · Less than a meal for a full year</p>
-  <div class="hero-img">
-    <div class="hero-screen">
-      <div class="screen-bar">
-        <div class="screen-dot" style="background:#FF5F57"></div>
-        <div class="screen-dot" style="background:#FFBD2E"></div>
-        <div class="screen-dot" style="background:#28C840"></div>
+  <!-- C + B: Split morph hero visual -->
+  <div class="hero-split">
+    <!-- Left: Browser -->
+    <div class="split-browser">
+      <div class="split-browser-bar">
+        <div class="split-browser-dot" style="background:#FF5F57"></div>
+        <div class="split-browser-dot" style="background:#FFBD2E"></div>
+        <div class="split-browser-dot" style="background:#28C840"></div>
+        <div class="split-browser-url"></div>
       </div>
-      <div class="screen-grid">
-        <div class="screen-card">
-          <div class="screen-card-label">Chrome Extension</div>
-          <div style="background:rgba(35,64,196,.2);border-radius:6px;padding:10px;margin-bottom:8px">
-            <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:6px">
-              <span lang-content="ko">현재 페이지 캡쳐</span><span lang-content="en">Capture current page</span>
-            </div>
-            <div style="height:5px;background:linear-gradient(90deg,#2340C4,#7ECFC0);border-radius:3px;width:75%"></div>
-            <div style="font-size:10px;color:var(--mint);margin-top:4px">✓ 663 nodes captured</div>
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,.35)">v21 · 1678px</div>
+      <div class="split-browser-body">
+        <div class="sb-nav"></div>
+        <div class="sb-hero-block"></div>
+        <div class="sb-cards-row">
+          <div class="sb-card-block"></div>
+          <div class="sb-card-block"></div>
+          <div class="sb-card-block"></div>
         </div>
-        <div class="screen-card">
-          <div class="screen-card-label">Figma Plugin</div>
-          <div style="margin-bottom:8px"><span style="display:inline-block;padding:3px 8px;border-radius:5px;background:rgba(126,207,192,.15);color:var(--mint);font-size:11px;font-weight:600">● Online</span></div>
-          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px">Converting... 528/663</div>
-          <div style="height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden">
-            <div style="height:100%;width:80%;background:linear-gradient(90deg,#2340C4,#7ECFC0);border-radius:2px"></div>
+        <div class="sb-text-rows">
+          <div class="sb-text-row" style="width:90%"></div>
+          <div class="sb-text-row" style="width:70%"></div>
+          <div class="sb-text-row" style="width:50%"></div>
+        </div>
+        <div class="sb-capture-overlay">
+          <span lang-content="ko">캡처 완료 · 663 nodes</span>
+          <span lang-content="en">Captured · 663 nodes</span>
+          <div class="capture-pulse"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Arrow -->
+    <div class="split-arrow-col">
+      <svg class="split-arrow-svg" viewBox="0 0 48 24" fill="none">
+        <path d="M2 12 H40 M32 4 L44 12 L32 20" stroke="url(#ag)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#2340C4"/><stop offset="1" stop-color="#7ECFC0"/></linearGradient></defs>
+      </svg>
+      <div class="split-arrow-label">CONVERT</div>
+    </div>
+
+    <!-- Right: Figma Plugin with live progress (B) -->
+    <div class="split-figma">
+      <div class="split-figma-bar">
+        <div class="sfb-dot" style="background:#FF5F57"></div>
+        <div class="sfb-dot" style="background:#FFBD2E"></div>
+        <div class="sfb-dot" style="background:#28C840"></div>
+        <div class="split-figma-bar-title">✦ Design Capture</div>
+      </div>
+      <div class="split-figma-body">
+        <div class="sf-layer-list" id="sf-layers">
+          <div class="sf-layer-item active"><span class="sf-layer-icon">▣</span>Hero Section<span class="sf-layer-tag">Frame</span></div>
+          <div class="sf-layer-item active"><span class="sf-layer-icon">T</span>Heading<span class="sf-layer-tag">Text</span></div>
+          <div class="sf-layer-item"><span class="sf-layer-icon">◈</span>CTA Button<span class="sf-layer-tag">Component</span></div>
+          <div class="sf-layer-item"><span class="sf-layer-icon">⬡</span>Nav Bar<span class="sf-layer-tag">Group</span></div>
+        </div>
+        <div class="sf-progress-section">
+          <div class="sf-prog-header">
+            <div class="sf-prog-label" lang-content="ko">변환 중...</div>
+            <div class="sf-prog-label" lang-content="en">Converting...</div>
+            <div class="sf-prog-pct" id="sf-pct">0%</div>
           </div>
-          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px">80% complete</div>
+          <div class="sf-prog-bar-bg">
+            <div class="sf-prog-bar-fill" id="sf-bar" style="width:0%"></div>
+          </div>
+          <div class="sf-prog-count" id="sf-count">0 / 663 nodes</div>
         </div>
       </div>
     </div>
@@ -239,30 +349,78 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
     <div class="section-label">How it works</div>
     <div class="section-title" lang-content="ko">3단계로 끝납니다</div>
     <div class="section-title" lang-content="en">Done in 3 steps</div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-icon">📡</div>
-        <h3 lang-content="ko">서버 실행</h3>
-        <h3 lang-content="en">Run the server</h3>
-        <p lang-content="ko">Design Capture Server 앱을 실행하세요. 트레이에 상주하며 백그라운드에서 자동 동작합니다.</p>
-        <p lang-content="en">Launch the Design Capture Server app. It runs silently in the system tray in the background.</p>
+    <!-- D: Scroll-triggered timeline -->
+    <div class="steps-timeline" id="steps-timeline">
+      <!-- Step 01 -->
+      <div class="step-tl" data-step="0">
+        <div class="step-tl-left">
+          <div class="step-tl-circ" id="circ-0">01</div>
+          <div class="step-tl-line" id="line-0"></div>
+        </div>
+        <div class="step-tl-right">
+          <div class="step-tl-num-label">Step 01</div>
+          <h3 class="step-tl-title" id="title-0">
+            <span lang-content="ko">서버 실행</span>
+            <span lang-content="en">Run the server</span>
+          </h3>
+          <p class="step-tl-desc" id="desc-0">
+            <span lang-content="ko">Design Capture Server 앱을 실행하세요. 트레이에 상주하며 백그라운드에서 자동 동작합니다.</span>
+            <span lang-content="en">Launch the Design Capture Server app. It runs silently in the system tray in the background.</span>
+          </p>
+          <div class="step-tl-tags" id="tags-0">
+            <span class="step-tl-tag">Mac · Apple Silicon</span>
+            <span class="step-tl-tag">Windows 10 / 11</span>
+            <span class="step-tl-tag" lang-content="ko">터미널 불필요</span>
+            <span class="step-tl-tag" lang-content="en">No terminal</span>
+          </div>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-icon">📸</div>
-        <h3 lang-content="ko">페이지 캡쳐</h3>
-        <h3 lang-content="en">Capture the page</h3>
-        <p lang-content="ko">Chrome 확장에서 캡쳐 버튼 클릭. DOM 구조, CSS, 폰트, 색상을 모두 정확히 수집합니다.</p>
-        <p lang-content="en">Click capture in the Chrome extension. DOM structure, CSS styles, fonts, and colors are all collected accurately.</p>
+      <!-- Step 02 -->
+      <div class="step-tl" data-step="1">
+        <div class="step-tl-left">
+          <div class="step-tl-circ" id="circ-1">02</div>
+          <div class="step-tl-line" id="line-1"></div>
+        </div>
+        <div class="step-tl-right">
+          <div class="step-tl-num-label">Step 02</div>
+          <h3 class="step-tl-title" id="title-1">
+            <span lang-content="ko">페이지 캡쳐</span>
+            <span lang-content="en">Capture the page</span>
+          </h3>
+          <p class="step-tl-desc" id="desc-1">
+            <span lang-content="ko">Chrome 확장에서 캡쳐 버튼 클릭. DOM 구조, CSS, 폰트, 색상을 모두 정확히 수집합니다.</span>
+            <span lang-content="en">Click capture in the Chrome extension. DOM structure, CSS styles, fonts, and colors are all collected accurately.</span>
+          </p>
+          <div class="step-tl-tags" id="tags-1">
+            <span class="step-tl-tag">DOM Structure</span>
+            <span class="step-tl-tag">CSS Styles</span>
+            <span class="step-tl-tag">Fonts &amp; Colors</span>
+          </div>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-icon">🎨</div>
-        <h3 lang-content="ko">Figma로 변환</h3>
-        <h3 lang-content="en">Convert to Figma</h3>
-        <p lang-content="ko">피그마 플러그인에서 가져오기 클릭. Frame, Text, Fill, Shadow 등 네이티브 요소로 생성됩니다.</p>
-        <p lang-content="en">Click import in the Figma plugin. Frames, Text, Fills, Shadows and more are created as native Figma elements.</p>
+      <!-- Step 03 -->
+      <div class="step-tl" data-step="2">
+        <div class="step-tl-left">
+          <div class="step-tl-circ" id="circ-2">03</div>
+        </div>
+        <div class="step-tl-right">
+          <div class="step-tl-num-label">Step 03</div>
+          <h3 class="step-tl-title" id="title-2">
+            <span lang-content="ko">Figma로 변환</span>
+            <span lang-content="en">Convert to Figma</span>
+          </h3>
+          <p class="step-tl-desc" id="desc-2">
+            <span lang-content="ko">피그마 플러그인에서 가져오기 클릭. Frame, Text, Fill, Shadow 등 네이티브 요소로 생성됩니다.</span>
+            <span lang-content="en">Click import in the Figma plugin. Frames, Text, Fills, Shadows and more are created as native Figma elements.</span>
+          </p>
+          <div class="step-tl-tags" id="tags-2">
+            <span class="step-tl-tag">Frame</span>
+            <span class="step-tl-tag">Text</span>
+            <span class="step-tl-tag">Fill &amp; Shadow</span>
+            <span class="step-tl-tag" lang-content="ko">네이티브 레이어</span>
+            <span class="step-tl-tag" lang-content="en">Native layers</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -476,5 +634,76 @@ function setLang(lang) {
   if (saved === 'en') setLang('en');
 })();
 </script>
+
+<script>
+/* ── B: Live progress counter ── */
+(function(){
+  var total=663, cur=0, running=false;
+  var layers=['Hero Section','Navigation','Card Grid','CTA Button','Footer','Text Blocks','Input Fields','Images'];
+  var layerEls=document.querySelectorAll('#sf-layers .sf-layer-item');
+  function runProgress(){
+    running=true; cur=0;
+    var interval=setInterval(function(){
+      cur+=Math.floor(Math.random()*8)+3;
+      if(cur>total)cur=total;
+      var pct=Math.round(cur/total*100);
+      var pctEl=document.getElementById('sf-pct');
+      var barEl=document.getElementById('sf-bar');
+      var countEl=document.getElementById('sf-count');
+      if(pctEl)pctEl.textContent=pct+'%';
+      if(barEl)barEl.style.width=pct+'%';
+      if(countEl)countEl.textContent=cur+' / '+total+' nodes';
+      // activate layers progressively
+      layerEls.forEach(function(el,i){
+        if(pct>=((i+1)/layerEls.length*100*0.6)){el.classList.add('active');}
+        else{el.classList.remove('active');}
+      });
+      if(cur>=total){
+        clearInterval(interval);
+        setTimeout(function(){running=false; setTimeout(runProgress,1800);},1200);
+      }
+    },60);
+  }
+  runProgress();
+})();
+
+/* ── D: Scroll-triggered step timeline ── */
+(function(){
+  var steps=[
+    {circ:'circ-0',line:'line-0',title:'title-0',desc:'desc-0',tags:'tags-0'},
+    {circ:'circ-1',line:'line-1',title:'title-1',desc:'desc-1',tags:'tags-1'},
+    {circ:'circ-2',line:null,    title:'title-2',desc:'desc-2',tags:'tags-2'}
+  ];
+  var triggered=false;
+  function activateStep(i){
+    if(i>=steps.length)return;
+    var s=steps[i];
+    var c=document.getElementById(s.circ);
+    var t=document.getElementById(s.title);
+    var d=document.getElementById(s.desc);
+    var tg=document.getElementById(s.tags);
+    if(c)c.classList.add('visible');
+    if(t)t.classList.add('visible');
+    if(d)d.classList.add('visible');
+    if(tg)tg.querySelectorAll('.step-tl-tag').forEach(function(el){el.classList.add('visible');});
+    if(s.line){
+      setTimeout(function(){
+        var l=document.getElementById(s.line);
+        if(l)l.classList.add('drawn');
+        setTimeout(function(){activateStep(i+1);},500);
+      },350);
+    }
+  }
+  var timeline=document.getElementById('steps-timeline');
+  if(!timeline)return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&!triggered){triggered=true;activateStep(0);}
+    });
+  },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+  io.observe(timeline);
+})();
+</script>
+
 </body>
 </html>
