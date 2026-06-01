@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Capture — Demo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0d1117;color:#fff;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* ── TOP BAR ── */
+.topbar{background:#161b27;border-bottom:1px solid rgba(255,255,255,.07);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700}
+.logo-mark{width:28px;height:28px;background:#2340C4;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.step-indicator{display:flex;gap:6px;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .4s}
+.step-dot.active{background:#7ECFC0;transform:scale(1.3)}
+.step-dot.done{background:#2340C4}
+.step-label{font-size:12px;color:rgba(255,255,255,.4);margin-left:8px}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;gap:0;overflow:hidden;position:relative}
+
+/* SCENE wrapper */
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;opacity:0;pointer-events:none;transition:opacity .6s}
+.scene.active{opacity:1;pointer-events:all}
+
+/* ── SCENE 0: INTRO ── */
+.intro-wrap{text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px}
+.intro-badge{background:rgba(35,64,196,.2);border:1px solid rgba(35,64,196,.4);border-radius:100px;padding:6px 18px;font-size:12px;color:#7ECFC0;font-weight:600;letter-spacing:.5px}
+.intro-h1{font-size:52px;font-weight:800;line-height:1.1;letter-spacing:-2px}
+.intro-h1 span{background:linear-gradient(135deg,#7ECFC0,#2340C4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.intro-sub{font-size:16px;color:rgba(255,255,255,.5);max-width:480px;line-height:1.6}
+.intro-flow{display:flex;align-items:center;gap:16px;margin-top:8px}
+.intro-step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 20px;text-align:center}
+.intro-step-icon{font-size:24px;margin-bottom:6px}
+.intro-step-label{font-size:12px;color:rgba(255,255,255,.6);font-weight:600}
+.intro-arrow{font-size:20px;color:rgba(255,255,255,.2)}
+.start-btn{background:#2340C4;border:none;color:#fff;font-size:15px;font-weight:700;padding:14px 36px;border-radius:12px;cursor:pointer;transition:all .2s;box-shadow:0 0 30px rgba(35,64,196,.4)}
+.start-btn:hover{background:#1a30a0;transform:translateY(-2px)}
+
+/* ── SCENE 1: SERVER ── */
+.server-desktop{display:flex;gap:24px;align-items:flex-start;max-width:900px;width:100%}
+.server-app{background:#1e2433;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;width:340px;flex-shrink:0}
+.server-titlebar{background:rgba(255,255,255,.04);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.tbar-dot{width:10px;height:10px;border-radius:50%}
+.tbar-title{font-size:12px;color:rgba(255,255,255,.4);margin-left:6px}
+.server-body{padding:24px}
+.server-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.server-logo-icon{width:40px;height:40px;background:#2340C4;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.server-logo-text{font-size:15px;font-weight:700}
+.server-logo-sub{font-size:11px;color:rgba(255,255,255,.4)}
+.server-status{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px;margin-bottom:14px}
+.status-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.status-row:last-child{margin-bottom:0}
+.status-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .5s}
+.status-dot.on{background:#28c840;box-shadow:0 0 8px rgba(40,200,64,.5)}
+.status-label{font-size:12px;color:rgba(255,255,255,.5)}
+.status-val{font-size:12px;color:rgba(255,255,255,.8);margin-left:auto}
+.server-btn{width:100%;height:42px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s;background:#2340C4;color:#fff}
+.server-btn.on{background:#28c840;color:#fff}
+
+.server-desc{flex:1}
+.scene-title{font-size:28px;font-weight:800;margin-bottom:10px;letter-spacing:-1px}
+.scene-sub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px}
+.scene-steps{display:flex;flex-direction:column;gap:10px}
+.scene-step{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:13px;color:rgba(255,255,255,.6);transition:all .5s}
+.scene-step.active{background:rgba(35,64,196,.15);border-color:rgba(35,64,196,.4);color:#fff}
+.scene-step.done{background:rgba(40,200,64,.1);border-color:rgba(40,200,64,.3);color:#fff}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:all .5s}
+.scene-step.active .step-num{background:#2340C4}
+.scene-step.done .step-num{background:#28c840}
+
+/* ── SCENE 2: CHROME CAPTURE ── */
+.chrome-demo{display:flex;gap:24px;align-items:flex-start;max-width:1000px;width:100%}
+.browser-frame{flex:1;background:#1e2433;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden}
+.browser-nav{background:rgba(255,255,255,.04);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.browser-url{flex:1;background:rgba(255,255,255,.08);border-radius:6px;padding:5px 12px;font-size:12px;color:rgba(255,255,255,.5);margin:0 10px}
+.ext-btn{background:#2340C4;color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;border:none;transition:all .2s;white-space:nowrap}
+.ext-btn:hover{background:#1a30a0}
+.browser-body{padding:16px}
+.page-mock-nav{height:28px;background:rgba(255,255,255,.06);border-radius:5px;margin-bottom:12px}
+.page-mock-hero{height:80px;background:linear-gradient(135deg,rgba(35,64,196,.25),rgba(126,207,192,.1));border-radius:8px;margin-bottom:10px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.page-mock-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);animation:shimmer 2.5s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.hero-text-mock{font-size:13px;font-weight:700;color:rgba(255,255,255,.4)}
+.page-cards{display:flex;gap:8px;margin-bottom:10px}
+.page-card{flex:1;height:44px;background:rgba(255,255,255,.05);border-radius:6px;border:1px solid rgba(255,255,255,.06)}
+.page-text-rows{display:flex;flex-direction:column;gap:5px}
+.page-text-row{height:6px;background:rgba(255,255,255,.06);border-radius:3px}
+
+.capture-overlay{margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(35,64,196,.2);border:1px solid rgba(35,64,196,.4);display:flex;align-items:center;justify-content:space-between;opacity:0;transition:opacity .4s}
+.capture-overlay.show{opacity:1}
+.cap-text{font-size:12px;color:#7ECFC0;font-weight:600}
+.cap-pulse{width:7px;height:7px;border-radius:50%;background:#7ECFC0;animation:cpulse 1s infinite}
+@keyframes cpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+.capture-panel{width:200px;flex-shrink:0}
+.capture-panel-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.node-list{display:flex;flex-direction:column;gap:5px}
+.node-item{padding:6px 10px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:11px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:7px;opacity:0;transform:translateX(8px);transition:all .4s}
+.node-item.show{opacity:1;transform:translateX(0)}
+.node-tag{margin-left:auto;font-size:9px;padding:2px 5px;border-radius:3px;background:rgba(126,207,192,.15);color:#7ECFC0;font-weight:700}
+.node-count{margin-top:10px;text-align:center;font-size:20px;font-weight:800;color:#7ECFC0;opacity:0;transition:opacity .4s}
+.node-count.show{opacity:1}
+.node-count-sub{font-size:11px;color:rgba(255,255,255,.4)}
+
+/* ── SCENE 3: FIGMA PLUGIN ── */
+.figma-demo{display:flex;gap:24px;align-items:flex-start;max-width:1000px;width:100%}
+.figma-canvas{flex:1;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
+.figma-topbar{background:rgba(255,255,255,.04);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.figma-tb-title{font-size:12px;color:rgba(255,255,255,.4);margin-left:6px}
+.figma-canvas-body{padding:20px;min-height:240px;position:relative;display:flex;align-items:center;justify-content:center}
+.figma-empty{font-size:13px;color:rgba(255,255,255,.2);text-align:center}
+.figma-frame{position:absolute;background:#fff;border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,.5);opacity:0;transform:scale(.9);transition:all .6s;overflow:hidden}
+.figma-frame.show{opacity:1;transform:scale(1)}
+.ff-nav{height:20px;background:#2340C4;width:100%}
+.ff-hero{height:40px;background:linear-gradient(135deg,#e8ecfa,#d0d9f0);margin:8px;border-radius:3px;display:flex;align-items:center;justify-content:center}
+.ff-hero-txt{font-size:8px;font-weight:700;color:#2340C4}
+.ff-cards{display:flex;gap:5px;margin:0 8px 8px}
+.ff-card{flex:1;height:24px;background:#f5f7ff;border-radius:3px;border:1px solid #e8ecfa}
+.ff-rows{margin:0 8px 8px;display:flex;flex-direction:column;gap:3px}
+.ff-row{height:5px;background:#e8ecfa;border-radius:2px}
+
+.figma-plugin-panel{width:220px;flex-shrink:0;background:#1e2433;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden}
+.plugin-hdr{background:#2340C4;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.plugin-hdr-logo{font-size:12px;font-weight:700;color:#fff}
+.plugin-hdr-bdg{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:#7ECFC0;color:#fff}
+.plugin-body{padding:10px}
+.plugin-card{background:#fff;border:1.5px solid #2340C4;border-radius:8px;padding:8px;margin-bottom:8px;box-shadow:0 0 0 3px rgba(35,64,196,.1)}
+.plugin-card-ci{display:flex;gap:7px}
+.plugin-card-thumb{width:48px;height:32px;border-radius:4px;background:linear-gradient(135deg,#2340C4,#7ECFC0);flex-shrink:0}
+.plugin-card-info{}
+.plugin-card-title{font-size:10px;font-weight:700;color:#1a1a2e;margin-bottom:2px}
+.plugin-card-url{font-size:9px;color:#888}
+.plugin-card-tags{display:flex;gap:3px;margin-top:3px}
+.plugin-card-tag{font-size:8px;padding:1px 5px;border-radius:3px;background:#e8ecfa;color:#2340C4;font-weight:700}
+.plugin-prog-section{border-top:1px solid #e8ecfa;padding-top:8px;margin-top:2px}
+.plugin-prog-hdr{display:flex;justify-content:space-between;margin-bottom:4px}
+.plugin-prog-label{font-size:9px;color:#888}
+.plugin-prog-pct{font-size:9px;font-weight:700;color:#2340C4}
+.plugin-prog-bar{height:3px;background:#e8ecfa;border-radius:100px;overflow:hidden;margin-bottom:3px}
+.plugin-prog-fill{height:100%;background:linear-gradient(90deg,#2340C4,#7ECFC0);border-radius:100px;transition:width .1s linear;width:0%}
+.plugin-prog-count{font-size:9px;color:#aaa;text-align:right}
+.plugin-import-btn{width:100%;height:32px;background:#2340C4;color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:5px}
+.plugin-done{background:#28c840!important}
+
+/* ── SCENE 4: RESULT ── */
+.result-wrap{text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px;max-width:700px}
+.result-icon{font-size:56px}
+.result-h1{font-size:40px;font-weight:800;letter-spacing:-1.5px}
+.result-h1 span{background:linear-gradient(135deg,#7ECFC0,#2340C4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+.result-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px}
+.result-card-icon{font-size:22px;margin-bottom:8px}
+.result-card-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.result-card-desc{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+.result-price{background:rgba(35,64,196,.15);border:1.5px solid rgba(35,64,196,.35);border-radius:14px;padding:18px 32px;display:flex;align-items:center;gap:16px}
+.rp-amount{font-size:36px;font-weight:800;line-height:1}
+.rp-desc{font-size:13px;color:rgba(255,255,255,.5);line-height:1.5}
+.restart-btn{background:transparent;border:1.5px solid rgba(255,255,255,.2);color:#fff;font-size:13px;font-weight:600;padding:10px 24px;border-radius:10px;cursor:pointer;transition:all .2s}
+.restart-btn:hover{border-color:#fff}
+
+/* ── NAV BTNS ── */
+.nav-btns{position:absolute;bottom:24px;right:24px;display:flex;gap:10px;z-index:10}
+.nav-btn{height:40px;padding:0 20px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-next{background:#2340C4;color:#fff}
+.btn-next:hover{background:#1a30a0}
+.btn-prev{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.btn-prev:hover{background:rgba(255,255,255,.12)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">✦</div>
+    Design Capture
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div class="step-indicator" id="steps">
+      <div class="step-dot active" id="dot-0"></div>
+      <div class="step-dot" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+    </div>
+    <div class="step-label" id="step-label">Intro</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- SCENE 0: INTRO -->
+  <div class="scene active" id="scene-0">
+    <div class="intro-wrap">
+      <div class="intro-badge">✦ Figma Plugin + Chrome Extension</div>
+      <div class="intro-h1">HTML to <span>Figma</span>,<br>Instantly</div>
+      <div class="intro-sub">Capture any web page with one click — layout, colors and fonts converted into native Figma design assets.</div>
+      <div class="intro-flow">
+        <div class="intro-step"><div class="intro-step-icon">🖥</div><div class="intro-step-label">Run Server</div></div>
+        <div class="intro-arrow">→</div>
+        <div class="intro-step"><div class="intro-step-icon">📸</div><div class="intro-step-label">Capture Page</div></div>
+        <div class="intro-arrow">→</div>
+        <div class="intro-step"><div class="intro-step-icon">🎨</div><div class="intro-step-label">Import to Figma</div></div>
+      </div>
+      <button class="start-btn" onclick="goTo(1)">▶ Watch Demo</button>
+    </div>
+  </div>
+
+  <!-- SCENE 1: SERVER -->
+  <div class="scene" id="scene-1">
+    <div class="server-desktop">
+      <div class="server-app">
+        <div class="server-titlebar">
+          <div class="tbar-dot" style="background:#ff5f57"></div>
+          <div class="tbar-dot" style="background:#ffbd2e"></div>
+          <div class="tbar-dot" style="background:#28c840"></div>
+          <div class="tbar-title">Design Capture Server</div>
+        </div>
+        <div class="server-body">
+          <div class="server-logo-row">
+            <div class="server-logo-icon">✦</div>
+            <div>
+              <div class="server-logo-text">Design Capture Server</div>
+              <div class="server-logo-sub">v1.0.4</div>
+            </div>
+          </div>
+          <div class="server-status">
+            <div class="status-row">
+              <div class="status-dot" id="srv-dot"></div>
+              <div class="status-label">Server status</div>
+              <div class="status-val" id="srv-val">Stopped</div>
+            </div>
+            <div class="status-row">
+              <div class="status-dot"></div>
+              <div class="status-label">Port</div>
+              <div class="status-val" style="font-family:monospace;color:#7ECFC0">:3721</div>
+            </div>
+            <div class="status-row">
+              <div class="status-dot"></div>
+              <div class="status-label">Platform</div>
+              <div class="status-val">Mac · Windows</div>
+            </div>
+          </div>
+          <button class="server-btn" id="srv-btn" onclick="startServer()">▶ Start Server</button>
+        </div>
+      </div>
+      <div class="server-desc">
+        <div class="scene-title">Step 01 — Run the Server</div>
+        <div class="scene-sub">Launch Design Capture Server app. It runs silently in the system tray — no terminal needed. Mac and Windows supported.</div>
+        <div class="scene-steps" id="srv-steps">
+          <div class="scene-step active" id="ss-0"><div class="step-num">1</div>Open Design Capture Server app</div>
+          <div class="scene-step" id="ss-1"><div class="step-num">2</div>Click Start Server</div>
+          <div class="scene-step" id="ss-2"><div class="step-num">3</div>Server running on :3721 ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 2: CAPTURE -->
+  <div class="scene" id="scene-2">
+    <div class="chrome-demo">
+      <div class="browser-frame">
+        <div class="browser-nav">
+          <div class="tbar-dot" style="background:#ff5f57"></div>
+          <div class="tbar-dot" style="background:#ffbd2e"></div>
+          <div class="tbar-dot" style="background:#28c840"></div>
+          <div class="browser-url">figma.com/community</div>
+          <button class="ext-btn" id="cap-ext-btn" onclick="runCapture()">✦ Capture</button>
+        </div>
+        <div class="browser-body">
+          <div class="page-mock-nav"></div>
+          <div class="page-mock-hero"><div class="hero-text-mock">Figma Community</div></div>
+          <div class="page-cards">
+            <div class="page-card"></div>
+            <div class="page-card"></div>
+            <div class="page-card"></div>
+          </div>
+          <div class="page-text-rows">
+            <div class="page-text-row" style="width:88%"></div>
+            <div class="page-text-row" style="width:65%"></div>
+            <div class="page-text-row" style="width:45%"></div>
+          </div>
+          <div class="capture-overlay" id="cap-overlay">
+            <div class="cap-text" id="cap-text">Capturing...</div>
+            <div class="cap-pulse"></div>
+          </div>
+        </div>
+      </div>
+      <div class="capture-panel">
+        <div class="capture-panel-title">Captured nodes</div>
+        <div class="node-list" id="node-list">
+          <div class="node-item" id="n0"><span>▣</span> Hero Section <span class="node-tag">Frame</span></div>
+          <div class="node-item" id="n1"><span>T</span> Heading <span class="node-tag">Text</span></div>
+          <div class="node-item" id="n2"><span>◈</span> Nav Bar <span class="node-tag">Group</span></div>
+          <div class="node-item" id="n3"><span>⬡</span> Card Grid <span class="node-tag">Flex</span></div>
+          <div class="node-item" id="n4"><span>▦</span> CTA Button <span class="node-tag">Button</span></div>
+          <div class="node-item" id="n5"><span>—</span> Footer <span class="node-tag">Section</span></div>
+        </div>
+        <div class="node-count" id="node-count">
+          <div style="font-size:28px;font-weight:800">663</div>
+          <div class="node-count-sub">nodes captured</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 3: FIGMA PLUGIN -->
+  <div class="scene" id="scene-3">
+    <div class="figma-demo">
+      <div class="figma-canvas">
+        <div class="figma-topbar">
+          <div class="tbar-dot" style="background:#ff5f57"></div>
+          <div class="tbar-dot" style="background:#ffbd2e"></div>
+          <div class="tbar-dot" style="background:#28c840"></div>
+          <div class="figma-tb-title">Figma — Untitled</div>
+        </div>
+        <div class="figma-canvas-body">
+          <div class="figma-empty" id="figma-empty">← Select a capture and click Import</div>
+          <div class="figma-frame" id="figma-frame" style="width:280px">
+            <div class="ff-nav"></div>
+            <div class="ff-hero"><div class="ff-hero-txt">Figma Community</div></div>
+            <div class="ff-cards">
+              <div class="ff-card"></div>
+              <div class="ff-card"></div>
+              <div class="ff-card"></div>
+            </div>
+            <div class="ff-rows">
+              <div class="ff-row" style="width:90%"></div>
+              <div class="ff-row" style="width:70%"></div>
+              <div class="ff-row" style="width:50%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="figma-plugin-panel">
+        <div class="plugin-hdr">
+          <div class="plugin-hdr-logo">✦ Design Capture</div>
+          <div class="plugin-hdr-bdg" id="plg-bdg">● Online</div>
+        </div>
+        <div class="plugin-body">
+          <div class="plugin-card">
+            <div class="plugin-card-ci">
+              <div class="plugin-card-thumb"></div>
+              <div class="plugin-card-info">
+                <div class="plugin-card-title">Figma Community</div>
+                <div class="plugin-card-url">figma.com/community</div>
+                <div class="plugin-card-tags">
+                  <span class="plugin-card-tag" style="background:#f0fff4;color:#276749">v22</span>
+                  <span class="plugin-card-tag">⬡ 663</span>
+                </div>
+              </div>
+            </div>
+            <div class="plugin-prog-section">
+              <div class="plugin-prog-hdr">
+                <div class="plugin-prog-label" id="plg-label">Ready to import</div>
+                <div class="plugin-prog-pct" id="plg-pct"></div>
+              </div>
+              <div class="plugin-prog-bar"><div class="plugin-prog-fill" id="plg-bar"></div></div>
+              <div class="plugin-prog-count" id="plg-count"></div>
+            </div>
+          </div>
+          <button class="plugin-import-btn" id="plg-btn" onclick="runImport()">⬇ Import to Figma</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 4: RESULT -->
+  <div class="scene" id="scene-4">
+    <div class="result-wrap">
+      <div class="result-icon">✅</div>
+      <div class="result-h1">Converted to <span>Figma</span></div>
+      <div class="result-grid">
+        <div class="result-card"><div class="result-card-icon">🎨</div><div class="result-card-title">Native Layers</div><div class="result-card-desc">Frames, Text, Fills and Shadows as real Figma elements</div></div>
+        <div class="result-card"><div class="result-card-icon">🔤</div><div class="result-card-title">Real Fonts</div><div class="result-card-desc">Font families and weights accurately mapped</div></div>
+        <div class="result-card"><div class="result-card-icon">✦</div><div class="result-card-title">CSS Variables</div><div class="result-card-desc">Design tokens resolved to actual color values</div></div>
+      </div>
+      <div class="result-price">
+        <div>
+          <div class="rp-amount">$9.99<span style="font-size:18px;opacity:.5">/yr</span></div>
+        </div>
+        <div class="rp-desc">Free plan: 20 conversions<br><strong style="color:#7ECFC0">License: Unlimited · All updates included</strong></div>
+      </div>
+      <button class="restart-btn" onclick="goTo(0)">↺ Watch again</button>
+    </div>
+  </div>
+
+  <!-- NAV BUTTONS -->
+  <div class="nav-btns">
+    <button class="nav-btn btn-prev" id="btn-prev" onclick="prev()" style="display:none">← Back</button>
+    <button class="nav-btn btn-next" id="btn-next" onclick="next()">Next →</button>
+  </div>
+</div>
+
+<script>
+var cur = 0;
+var total = 5;
+var labels = ['Intro','Step 01 — Server','Step 02 — Capture','Step 03 — Import','Result'];
+var srvStarted = false, capDone = false, importDone = false;
+
+function goTo(n) {
+  document.getElementById('scene-'+cur).classList.remove('active');
+  document.getElementById('dot-'+cur).classList.remove('active');
+  document.getElementById('dot-'+cur).classList.add('done');
+  cur = n;
+  document.getElementById('scene-'+cur).classList.add('active');
+  // reset done for current
+  for(var i=0;i<total;i++){
+    var d=document.getElementById('dot-'+i);
+    if(d){
+      d.classList.remove('active','done');
+      if(i<cur) d.classList.add('done');
+      if(i===cur) d.classList.add('active');
+    }
+  }
+  document.getElementById('step-label').textContent = labels[cur]||'';
+  document.getElementById('btn-prev').style.display = cur>0?'':'none';
+  document.getElementById('btn-next').textContent = cur===total-1?'↺ Restart':'Next →';
+  if(cur===1) initServer();
+  if(cur===2) initCapture();
+  if(cur===3) initPlugin();
+}
+function next(){if(cur===total-1){goTo(0);}else{goTo(cur+1);}}
+function prev(){if(cur>0)goTo(cur-1);}
+
+// SCENE 1
+function initServer(){srvStarted=false;document.getElementById('srv-dot').classList.remove('on');document.getElementById('srv-val').textContent='Stopped';document.getElementById('srv-btn').textContent='▶ Start Server';document.getElementById('srv-btn').classList.remove('on');['ss-0','ss-1','ss-2'].forEach(function(id,i){var el=document.getElementById(id);el.classList.remove('active','done');if(i===0)el.classList.add('active');});}
+function startServer(){
+  if(srvStarted)return;
+  document.getElementById('srv-btn').textContent='Starting...';
+  document.getElementById('ss-0').classList.remove('active');document.getElementById('ss-0').classList.add('done');
+  document.getElementById('ss-1').classList.add('active');
+  setTimeout(function(){
+    document.getElementById('srv-dot').classList.add('on');
+    document.getElementById('srv-val').textContent='Running';
+    document.getElementById('srv-btn').textContent='● Running';
+    document.getElementById('srv-btn').classList.add('on');
+    document.getElementById('ss-1').classList.remove('active');document.getElementById('ss-1').classList.add('done');
+    document.getElementById('ss-2').classList.add('active');
+    srvStarted=true;
+    setTimeout(function(){goTo(2);},1200);
+  },1200);
+}
+
+// SCENE 2
+function initCapture(){capDone=false;document.getElementById('cap-overlay').classList.remove('show');document.getElementById('cap-text').textContent='Capturing...';document.getElementById('node-count').classList.remove('show');for(var i=0;i<6;i++){var el=document.getElementById('n'+i);if(el){el.classList.remove('show');}}}
+function runCapture(){
+  if(capDone)return;
+  document.getElementById('cap-ext-btn').textContent='Capturing...';
+  document.getElementById('cap-overlay').classList.add('show');
+  var nodes=['n0','n1','n2','n3','n4','n5'];
+  nodes.forEach(function(id,i){setTimeout(function(){var el=document.getElementById(id);if(el)el.classList.add('show');},300+i*200);});
+  setTimeout(function(){
+    document.getElementById('cap-text').textContent='✓ 663 nodes captured';
+    document.getElementById('node-count').classList.add('show');
+    document.getElementById('cap-ext-btn').textContent='✓ Done';
+    capDone=true;
+    setTimeout(function(){goTo(3);},1200);
+  },300+6*200+400);
+}
+
+// SCENE 3
+function initPlugin(){importDone=false;document.getElementById('plg-bar').style.width='0%';document.getElementById('plg-pct').textContent='';document.getElementById('plg-count').textContent='';document.getElementById('plg-label').textContent='Ready to import';document.getElementById('plg-btn').textContent='⬇ Import to Figma';document.getElementById('plg-btn').classList.remove('plugin-done');document.getElementById('figma-frame').classList.remove('show');document.getElementById('figma-empty').style.opacity='1';}
+function runImport(){
+  if(importDone)return;
+  var total=663,cur=0;
+  document.getElementById('plg-label').textContent='Converting...';
+  document.getElementById('plg-btn').textContent='Converting...';
+  var iv=setInterval(function(){
+    cur+=Math.floor(Math.random()*10)+4;
+    if(cur>total)cur=total;
+    var pct=Math.round(cur/total*100);
+    document.getElementById('plg-bar').style.width=pct+'%';
+    document.getElementById('plg-pct').textContent=pct+'%';
+    document.getElementById('plg-count').textContent=cur+' / '+total+' nodes';
+    if(cur>=total){
+      clearInterval(iv);
+      document.getElementById('plg-label').textContent='✓ Import complete!';
+      document.getElementById('plg-btn').textContent='✓ Done';
+      document.getElementById('plg-btn').classList.add('plugin-done');
+      document.getElementById('figma-empty').style.opacity='0';
+      document.getElementById('figma-frame').classList.add('show');
+      importDone=true;
+      setTimeout(function(){goTo(4);},1400);
+    }
+  },55);
+}
+</script>
+</body>
+</html>
