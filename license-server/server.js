@@ -68,8 +68,8 @@ function requireAdmin(req, res, next) {
 // ── 수동 라이선스 등록 ─────────────────────
 app.post('/admin/grant', requireAdmin, async (req, res) => {
   const { licenseKey, email, figmaUserId, figmaUserName, expiresAt } = req.body;
-  if (!licenseKey || !figmaUserId) {
-    return res.status(400).json({ ok: false, error: 'licenseKey, figmaUserId 필수' });
+  if (!licenseKey) {
+    return res.status(400).json({ ok: false, error: 'licenseKey 필수' });
   }
   try {
     await pool.query(`
@@ -115,7 +115,7 @@ app.post('/admin/revoke', requireAdmin, async (req, res) => {
 app.post('/webhook/polar', async (req, res) => {
   try {
     // 서명 검증
-        if (POLAR_WEBHOOK_SECRET) {
+    if (POLAR_WEBHOOK_SECRET) {
       const webhookId = req.headers['webhook-id'];
       const webhookTimestamp = req.headers['webhook-timestamp'];
       const webhookSignature = req.headers['webhook-signature'];
