@@ -18,18 +18,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--dark);color:var(--wh
 .lang-btn{padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.5);transition:all .15s;letter-spacing:.3px}
 .lang-btn.active{background:var(--blue);color:#fff}
 [lang-content="en"]{display:none}
-[lang-content="ko"]{display:inline}
+[lang-content="ko"]{display:block}
 body.en [lang-content="ko"]{display:none!important}
-body.en [lang-content="en"]{display:inline!important}
-/* 블록 레벨 요소(h1, p, div 등)는 block 유지 */
-h1[lang-content],h2[lang-content],h3[lang-content],h4[lang-content],
-p[lang-content],div[lang-content]{display:block}
-h1[lang-content="en"],h2[lang-content="en"],h3[lang-content="en"],h4[lang-content="en"],
-p[lang-content="en"],div[lang-content="en"]{display:none}
-body.en h1[lang-content="ko"],body.en h2[lang-content="ko"],body.en h3[lang-content="ko"],
-body.en h4[lang-content="ko"],body.en p[lang-content="ko"],body.en div[lang-content="ko"]{display:none!important}
-body.en h1[lang-content="en"],body.en h2[lang-content="en"],body.en h3[lang-content="en"],
-body.en h4[lang-content="en"],body.en p[lang-content="en"],body.en div[lang-content="en"]{display:block!important}
+body.en [lang-content="en"]{display:block!important}
 body.en{font-family:'Syne','Noto Sans KR',sans-serif}
 
 /* ── NAV ── */
@@ -271,7 +262,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
 .faq-arr{margin-left:auto;font-size:20px;color:var(--mint);font-weight:300;transition:transform .2s;flex-shrink:0}
 .faq-q[aria-expanded="true"] .faq-arr{transform:rotate(45deg)}
 .faq-a{padding:0 26px 18px;font-size:13px;color:rgba(255,255,255,.6);line-height:1.75}
-.faq-a[hidden]{display:none!important}
+.faq-a[hidden]{display:none}
 .faq-footer{display:flex;align-items:center;gap:12px;margin-top:32px;justify-content:center;font-size:14px;color:rgba(255,255,255,.5);flex-wrap:wrap}
 .faq-contact{color:var(--mint);text-decoration:none;font-weight:600}
 .faq-contact:hover{opacity:.75}
@@ -325,7 +316,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
   <p class="hero-sub" lang-content="ko">웹 페이지 어디서나 클릭 한 번으로 캡쳐 — 레이아웃, 색상, 폰트까지 Figma 디자인 에셋으로 정확하게 변환됩니다.</p>
   <p class="hero-sub" lang-content="en">Capture any web page with one click — layout, colors, fonts and more, converted accurately into native Figma design assets.</p>
   <div class="hero-btns">
-    <a href="#pricing" class="btn-primary">
+    <a href="https://buy.polar.sh/polar_cl_wu3UeKO88TOoVjyJHIBJUq8UHHSthdWCdjn5t0t9LI1" class="btn-primary">
       <span lang-content="ko">✦ 라이센스 구매 $9.99</span>
       <span lang-content="en">✦ Get License $9.99</span>
     </a>
@@ -694,7 +685,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
 
     <!-- Quick start guide -->
     <div class="qs-wrap">
-      <button class="qs-header" aria-expanded="false">
+      <button class="qs-header" onclick="this.parentElement.classList.toggle('open')" aria-expanded="false">
         <span>⚙</span>
         <span lang-content="ko">설치 후 시작 가이드 (보안 경고 해결법 포함)</span>
         <span lang-content="en">Quick start guide (incl. security warning fixes)</span>
@@ -849,7 +840,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
         <li><span class="check">✓</span><span lang-content="ko">모든 업데이트 포함</span><span lang-content="en">All updates included</span></li>
         <li><span class="check">✓</span><span lang-content="ko">이메일 지원</span><span lang-content="en">Email support</span></li>
       </ul>
-      <a href="https://your-store.lemonsqueezy.com/checkout/buy/xxxxx" class="price-cta">
+      <a href="https://buy.polar.sh/polar_cl_wu3UeKO88TOoVjyJHIBJUq8UHHSthdWCdjn5t0t9LI1" class="price-cta">
         <span lang-content="ko">지금 구매하기 →</span>
         <span lang-content="en">Buy now →</span>
       </a>
@@ -880,7 +871,7 @@ document.querySelectorAll('.qs-header').forEach(function(btn){
   btn.addEventListener('click',function(){
     var wrap=this.closest('.qs-wrap');
     var open=wrap.classList.toggle('open');
-    this.setAttribute('aria-expanded', open ? 'true' : 'false');
+    this.setAttribute('aria-expanded', open);
   });
 });
 
@@ -888,19 +879,9 @@ document.querySelectorAll('.qs-header').forEach(function(btn){
 document.querySelectorAll('.faq-q').forEach(function(btn){
   btn.addEventListener('click',function(){
     var isOpen=this.getAttribute('aria-expanded')==='true';
-    // 모두 닫기
-    document.querySelectorAll('.faq-q').forEach(function(b){
-      b.setAttribute('aria-expanded','false');
-    });
-    document.querySelectorAll('.faq-a').forEach(function(a){
-      a.hidden=true;
-    });
-    // 클릭한 것 열기 (토글)
-    if(!isOpen){
-      this.setAttribute('aria-expanded','true');
-      var ans=this.nextElementSibling;
-      if(ans && ans.classList.contains('faq-a')){ans.hidden=false;}
-    }
+    document.querySelectorAll('.faq-q').forEach(function(b){b.setAttribute('aria-expanded','false');});
+    document.querySelectorAll('.faq-a').forEach(function(a){a.hidden=true;});
+    if(!isOpen){this.setAttribute('aria-expanded','true');this.nextElementSibling.hidden=false;}
   });
 });
 
