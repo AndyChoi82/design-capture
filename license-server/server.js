@@ -115,7 +115,7 @@ app.post('/admin/revoke', requireAdmin, async (req, res) => {
 app.post('/webhook/polar', async (req, res) => {
   try {
     // 서명 검증
-        if (false && POLAR_WEBHOOK_SECRET) {
+        if (POLAR_WEBHOOK_SECRET) {
       const webhookId = req.headers['webhook-id'];
       const webhookTimestamp = req.headers['webhook-timestamp'];
       const webhookSignature = req.headers['webhook-signature'];
