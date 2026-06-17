@@ -139,27 +139,61 @@ app.post('/webhook/polar', async (req, res) => {
     const type = event.type;
     console.log(`📨 Polar webhook: ${type}`);
 
-    // 구독 활성화 시 라이선스 등록
-    if (type === 'subscription.active' || type === 'order.paid') {
-      const subId = event.data?.id;
-      const email = event.data?.customer?.email || event.data?.billing_address?.email || '';
+    // 구독 활성화 / 주문 완료 시 라이선스 등록
+    if (type === 'benefit_grant.created' || type === 'order.paid') {
+      const email = event.data?.customer?.email || '';
+      const customerId = event.data?.customer_id || event.data?.customer?.id || '';
 
-      if (subId) {
-        await pool.query(`
-          INSERT INTO licenses (license_key, email, active, source, created_at)
-          VALUES ($1, $2, true, 'polar', NOW())
-          ON CONFLICT (license_key) DO UPDATE SET active = true, email = EXCLUDED.email
-        `, [subId, email]);
-        console.log(`✅ Polar 라이선스 등록: ${subId} (${email})`);
+      // benefit_grant.created: license key가 event.data.properties.key에 있음
+      if (type === 'benefit_grant.created') {
+        const licenseKey = event.data?.properties?.key || event.data?.benefit_grant?.key || '';
+        if (licenseKey) {
+          await pool.query(`
+            INSERT INTO licenses (license_key, email, active, source, created_at)
+            VALUES ($1, $2, true, 'polar', NOW())
+            ON CONFLICT (license_key) DO UPDATE SET active = true, email = EXCLUDED.email
+          `, [licenseKey, email]);
+          console.log(`✅ Polar 라이선스 등록 (benefit_grant): ${licenseKey} (${email})`);
+        }
+      }
+
+      // order.paid: Polar API로 해당 고객의 license key 조회
+      if (type === 'order.paid' && customerId) {
+        try {
+          const POLAR_ACCESS_TOKEN = process.env.POLAR_ACCESS_TOKEN;
+          if (POLAR_ACCESS_TOKEN) {
+            const resp = await fetch(`https://api.polar.sh/v1/license-keys/?customer_id=${customerId}`, {
+              headers: { 'Authorization': `Bearer ${POLAR_ACCESS_TOKEN}` }
+            });
+            if (resp.ok) {
+              const data = await resp.json();
+              const keys = data.items || [];
+              for (const k of keys) {
+                if (k.key && k.status === 'granted') {
+                  await pool.query(`
+                    INSERT INTO licenses (license_key, email, active, source, created_at)
+                    VALUES ($1, $2, true, 'polar', NOW())
+                    ON CONFLICT (license_key) DO UPDATE SET active = true, email = EXCLUDED.email
+                  `, [k.key, email]);
+                  console.log(`✅ Polar 라이선스 등록 (order.paid): ${k.key} (${email})`);
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.error('Polar license key 조회 실패:', e);
+        }
       }
     }
 
     // 구독 취소/만료 시 비활성화
-    if (type === 'subscription.canceled' || type === 'subscription.revoked') {
+    if (type === 'subscription.canceled' || type === 'subscription.revoked' || type === 'benefit_grant.revoked') {
+      const licenseKey = event.data?.properties?.key || event.data?.benefit_grant?.key || '';
       const subId = event.data?.id;
-      if (subId) {
-        await pool.query(`UPDATE licenses SET active = false WHERE license_key = $1`, [subId]);
-        console.log(`❌ Polar 라이선스 비활성화: ${subId}`);
+      const keyToRevoke = licenseKey || subId;
+      if (keyToRevoke) {
+        await pool.query(`UPDATE licenses SET active = false WHERE license_key = $1`, [keyToRevoke]);
+        console.log(`❌ Polar 라이선스 비활성화: ${keyToRevoke}`);
       }
     }
 
