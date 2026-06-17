@@ -125,7 +125,7 @@ app.post('/webhook/polar', async (req, res) => {
       }
 
       const signedContent = `${webhookId}.${webhookTimestamp}.${req.body.toString()}`;
-      const secretBytes = Buffer.from(POLAR_WEBHOOK_SECRET.replace('whsec_', ''), 'base64');
+      const secretBytes = Buffer.from(POLAR_WEBHOOK_SECRET.replace('whsec_', '').replace('polar_whs_', ''), 'base64');
       const hmac = crypto.createHmac('sha256', secretBytes);
       hmac.update(signedContent);
       const expectedSig = `v1,${hmac.digest('base64')}`;
