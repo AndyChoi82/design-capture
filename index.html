@@ -603,7 +603,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
         <p class="i3-desc" lang-content="ko">로컬에서 실행되는 릴레이 서버. 트레이에 상주하며 백그라운드 동작. 터미널 불필요.</p>
         <p class="i3-desc" lang-content="en">Local relay server running silently in the system tray. No terminal needed.</p>
         <div class="i3-btns">
-          <a href="https://github.com/AndyChoi82/design-capture/releases/download/v1.0.4/Design.Capture.Server-1.0.4-arm64.dmg" class="i3-btn i3-btn--primary">
+          <a href="https://github.com/AndyChoi82/design-capture/releases/download/v1.0.5/Design.Capture.Server-1.0.5-arm64.dmg" class="i3-btn i3-btn--primary">
             <span class="i3-btn-icon">🍎</span>
             <span class="i3-btn-body">
               <span class="i3-btn-label">Mac Apple Silicon</span>
@@ -611,14 +611,14 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
               <span class="i3-btn-sub" lang-content="en">M1 · M2 · M3 · M4 &nbsp;Recommended</span>
             </span>
           </a>
-          <a href="https://github.com/AndyChoi82/design-capture/releases/download/v1.0.4/Design.Capture.Server-1.0.4.dmg" class="i3-btn">
+          <a href="https://github.com/AndyChoi82/design-capture/releases/download/v1.0.5/Design.Capture.Server-1.0.5.dmg" class="i3-btn">
             <span class="i3-btn-icon">🍎</span>
             <span class="i3-btn-body">
               <span class="i3-btn-label">Mac Intel</span>
               <span class="i3-btn-sub">Intel Core</span>
             </span>
           </a>
-          <a href="https://github.com/AndyChoi82/design-capture/releases/download/v1.0.4/Design.Capture.Server.Setup.1.0.4.exe" class="i3-btn">
+          <a href="https://github.com/AndyChoi82/design-capture/releases/download/v1.0.5/Design.Capture.Server.Setup.1.0.5.exe" class="i3-btn">
             <span class="i3-btn-icon">🪟</span>
             <span class="i3-btn-body">
               <span class="i3-btn-label">Windows</span>
@@ -626,7 +626,7 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
             </span>
           </a>
         </div>
-        <div class="i3-note">v1.0.4</div>
+        <div class="i3-note">v1.0.5</div>
       </div>
 
       <!-- 02 Chrome Extension -->
@@ -811,6 +811,60 @@ footer{padding:44px 40px;border-top:1px solid rgba(255,255,255,.06);text-align:c
         <div class="faq-a" hidden>
           <span lang-content="ko">라이센스 1개로 최대 2대 기기에서 동시 사용 가능합니다. 1년 후 만료되며 동일한 가격($9.99)으로 갱신할 수 있습니다.</span>
           <span lang-content="en">One license covers up to 2 devices simultaneously. It's valid for 1 year and can be renewed at the same price ($9.99).</span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span lang-content="ko">서버 앱 재설치 시 "cannot be closed" 오류가 뜨는데 어떻게 하나요?</span>
+          <span lang-content="en">I see a "cannot be closed" error when reinstalling the server app. What should I do?</span>
+          <span class="faq-arr">+</span>
+        </button>
+        <div class="faq-a" hidden>
+          <span lang-content="ko">
+            이전 버전이 완전히 종료되지 않은 상태에서 재설치 시도 시 발생하는 오류입니다. 아래 순서로 해결하세요.<br><br>
+            <b style="color:var(--mint)">1. 작업 관리자에서 프로세스 종료</b><br>
+            Ctrl+Shift+Esc → Design Capture Server 관련 프로세스 우클릭 → 작업 끝내기<br><br>
+            <b style="color:var(--mint)">2. 재부팅 후 재설치</b><br>
+            재부팅 후 다른 프로그램 실행 전 바로 새 인스톨러를 관리자 권한으로 실행하세요.<br><br>
+            <b style="color:var(--mint)">3. 그래도 안 될 경우 — 레지스트리 정리 (Windows)</b><br>
+            CMD(관리자)에서 아래 명령어로 등록 키를 확인 후 삭제하세요:<br>
+            <code style="display:block;background:#1a1a2e;color:#7ECFC0;padding:8px 10px;border-radius:6px;font-size:11px;margin-top:6px">reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" /s | findstr /i "capture"</code>
+            키를 찾은 후: <code style="background:#1a1a2e;color:#7ECFC0;padding:2px 6px;border-radius:4px;font-size:11px">reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\[키이름]" /f</code><br><br>
+            삭제 후 재부팅 없이 새 인스톨러를 관리자 권한으로 실행하면 됩니다.
+          </span>
+          <span lang-content="en">
+            This error occurs when the previous version didn't shut down cleanly before reinstalling. Follow these steps:<br><br>
+            <b style="color:var(--mint)">1. Kill the process in Task Manager</b><br>
+            Ctrl+Shift+Esc → find Design Capture Server → right-click → End Task<br><br>
+            <b style="color:var(--mint)">2. Reboot and reinstall</b><br>
+            After rebooting, run the new installer as Administrator before launching anything else.<br><br>
+            <b style="color:var(--mint)">3. If that doesn't work — clean the registry (Windows)</b><br>
+            In CMD (Admin), run the following to find the leftover entry:<br>
+            <code style="display:block;background:#1a1a2e;color:#7ECFC0;padding:8px 10px;border-radius:6px;font-size:11px;margin-top:6px">reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" /s | findstr /i "capture"</code>
+            Then delete it: <code style="background:#1a1a2e;color:#7ECFC0;padding:2px 6px;border-radius:4px;font-size:11px">reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\[key-name]" /f</code><br><br>
+            After deletion, run the new installer as Administrator — no reboot needed.
+          </span>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span lang-content="ko">로컬 파일(file://)을 캡처하려는데 오류가 납니다.</span>
+          <span lang-content="en">I can't capture local files (file://). What's wrong?</span>
+          <span class="faq-arr">+</span>
+        </button>
+        <div class="faq-a" hidden>
+          <span lang-content="ko">
+            Chrome 확장은 기본적으로 로컬 파일 접근이 차단되어 있습니다. 아래와 같이 권한을 허용해 주세요.<br><br>
+            <b style="color:var(--mint)">chrome://extensions → Design Capture → 세부정보 → 파일 URL에 대한 액세스 허용 ON</b><br><br>
+            서버 앱 재설치 후에는 이 설정이 초기화될 수 있으니 다시 확인해 주세요.
+          </span>
+          <span lang-content="en">
+            Chrome extensions are blocked from accessing local files by default. Enable it as follows:<br><br>
+            <b style="color:var(--mint)">chrome://extensions → Design Capture → Details → Allow access to file URLs ON</b><br><br>
+            Note: this setting may reset after reinstalling the server app, so check it again if local file capture stops working.
+          </span>
         </div>
       </div>
 
